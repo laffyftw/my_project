@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/laffyftw/my_project/issues"
   },
-  "homepage": "https://github.com/laffyftw/my_project#readme"
+  "homepage": "https://github.com/laffyftw/my_project#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
