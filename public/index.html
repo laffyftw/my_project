@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Joke Teller</title>
+  </head>
+  <body>
+    <h1>Joke Teller</h1>
+    <p>Select a language:</p>
+    <button id="no-button">Norwegian</button>
+    <button id="en-button">English</button>
+    <button id="fr-button">French</button>
+    <p id="joke-text"></p>
+    <script>
+      async function getJoke(lang) {
+        const response = await fetch(`/joke?lang=${lang}`);
+        const data = await response.json();
+        document.getElementById('joke-text').textContent = data.joke;
+      }
+
+      document.getElementById('no-button').addEventListener('click', () => {
+        getJoke('nb-NO');
+      });
+
+      document.getElementById('en-button').addEventListener('click', () => {
+        getJoke('en');
+      });
+
+      document.getElementById('fr-button').addEventListener('click', () => {
+        getJoke('fr');
+      });
+
+      // Get a joke in the user's preferred language on page load
+      const userLang = navigator.language;
+      getJoke(userLang);
+    </script>
+  </body>
+</html>

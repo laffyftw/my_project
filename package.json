@@ -2,7 +2,7 @@
   "name": "my_project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/laffyftw/my_project.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -20,6 +19,6 @@
   "dependencies": {
     "express": "^4.18.2",
     "jokemaster": "github:mm-207/JokeModuleDemo",
-    "languagemodule": "github:laffyftw/Language_Module"
+    "langmodule": "github:laffyftw/Language_Module"
   }
 }
