@@ -6,17 +6,19 @@
   </head>
   <body>
     <h1>Joke Teller</h1>
-    <p>Select a language:</p>
+    <p>Press a button for each language and a random joke in that language comes up:</p>
     <button id="no-button">Norwegian</button>
     <button id="en-button">English</button>
     <button id="fr-button">French</button>
     <p id="joke-text"></p>
     <script>
       async function getJoke(lang) {
-        const response = await fetch(`/joke?lang=${lang}`);
-        const data = await response.json();
-        document.getElementById('joke-text').textContent = data.joke;
-      }
+  const response = await fetch(`../node_modules/langmodule/jokelang/${lang}.json`);
+  const data = await response.json();
+  const jokeList = data.jokes;
+  const randomIndex = Math.floor(Math.random() * jokeList.length);
+  document.getElementById('joke-text').textContent = jokeList[randomIndex];
+}
 
       document.getElementById('no-button').addEventListener('click', () => {
         getJoke('nb-NO');
