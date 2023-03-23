@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
   res.sendFile('index.html', { root: './public' });
 });
 
+//tester om github funker på ny pc
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
