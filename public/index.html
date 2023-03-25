@@ -1,43 +1,23 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Joke Teller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
-
 <body>
-  <h1>Joke Teller</h1>
-  <p>Press a button for each language and a random joke in that language comes up:</p>
-  <button id="no-button">Norwegian</button>
-  <button id="en-button">English</button>
-  <button id="fr-button">French</button>
-  <p id="joke-text"></p>
-  <script>
-    async function getJoke(lang) {
-      const response = await fetch(`../node_modules/langmodule/jokelang/${lang}.json`);
-      const data = await response.json();
-      const jokeList = data.jokes;
-      const randomIndex = Math.floor(Math.random() * jokeList.length);
-      document.getElementById('joke-text').textContent = jokeList[randomIndex];
-    }
-
-    document.getElementById('no-button').addEventListener('click', () => {
-      getJoke('nb-NO');
-    });
-
-    document.getElementById('en-button').addEventListener('click', () => {
-      getJoke('en');
-    });
-
-    document.getElementById('fr-button').addEventListener('click', () => {
-      getJoke('fr');
-    });
-
-
-    const userLang = navigator.language;
-    getJoke(userLang);
-  </script>
+  <div id="app">
+    <h1>Todo List</h1>
+    
+    <div id="todo-list">
+      
+    </div>
+    <form id="add-todo-form">
+      <input type="text" id="new-todo" placeholder="New todo item">
+      <button type="submit">Add</button>
+    </form>
+  </div>
+  <script type="module" src="/script.mjs"></script>
 </body>
-
 </html>
