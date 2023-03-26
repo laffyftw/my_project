@@ -3,6 +3,8 @@ const router = express.Router();
 import pool from '../db/index.mjs';
 import { sessions } from '../server.mjs';
 
+const loggedInUsers = new Map();
+
 //Adding simple hash function
 function simpleHash(str) {
     let hash = 0;
@@ -35,13 +37,14 @@ router.use((req, res, next) => {
   
     try {
       const { rows } = await pool.query('INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *', [username, passwordHash]);
+      req.session.user = { id: rows[0].id };
       res.status(201).json({ message: 'User registered successfully', user: rows[0] });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'An error occurred while registering' });
     }
   });
-
+  
   router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const passwordHash = simpleHash(password);
@@ -53,17 +56,20 @@ router.use((req, res, next) => {
         return res.status(401).json({ error: 'Invalid username or password' });
       }
   
-      // Set the session user
-      req.session.user = rows[0];
+      req.session.user = { id: rows[0].id }; 
+      loggedInUsers.set(username, rows[0].id);
       res.json({ message: 'Logged in successfully', user: rows[0] });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'An error occurred while logging in' });
     }
   });
+  
 
   const authenticateSession = (req, res, next) => {
-    if (!req.session.user) {
+    const userId = loggedInUsers.get(req.body.username);
+  
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
   

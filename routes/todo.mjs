@@ -1,10 +1,12 @@
 import express from 'express';
 const router = express.Router();
 import pool from '../db/index.mjs';
+import { authenticateSession } from '../routes/auth.mjs';
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateSession, async (req, res) => {
+  const username = req.query.username;
   try {
-    const { rows } = await pool.query('SELECT * FROM todos');
+    const { rows } = await pool.query('SELECT todos.* FROM todos JOIN users ON todos.user_id = users.id WHERE users.username = $1', [username]);
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -12,9 +14,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateSession, async (req, res) => {
   try {
     const { title } = req.body;
+    //const userId = req.session.user.id;
     const { rows } = await pool.query('INSERT INTO todos (title) VALUES ($1) RETURNING *', [title]);
     res.status(201).json(rows[0]);
   } catch (err) {
@@ -23,7 +26,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateSession, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, completed } = req.body;
@@ -35,7 +38,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateSession, async (req, res) => {
   try {
     const { id } = req.params;
     await pool.query('DELETE FROM todos WHERE id = $1', [id]);

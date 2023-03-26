@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todo List</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
 </head>
 <body>
-  <div id="app">
-    <h1>Todo List</h1>
-    
-    <div id="todo-list">
-      
+    <div id="auth">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" id="registerUsername" placeholder="Username">
+            <input type="password" id="registerPassword" placeholder="Password">
+            <button type="submit">Register</button>
+        </form>
+
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username">
+            <input type="password" id="loginPassword" placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
     </div>
-    <form id="add-todo-form">
-      <input type="text" id="new-todo" placeholder="New todo item">
-      <button type="submit">Add</button>
-    </form>
-  </div>
-  <script type="module" src="/script.mjs"></script>
+
+    <div id="app" class="hidden">
+        
+        <input type="text" id="newTodoInput">
+        <button id="addTodoButton">Add Todo</button>
+        <div id="todoContainer"></div>
+    </div>
+    <script type="module" src="/js/script.mjs"></script>
 </body>
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
 </html>
