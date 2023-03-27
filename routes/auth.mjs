@@ -67,7 +67,7 @@ router.use((req, res, next) => {
   
 
   const authenticateSession = (req, res, next) => {
-    const userId = loggedInUsers.get(req.body.username);
+    const userId = loggedInUsers.get(req.query.username);
   
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });

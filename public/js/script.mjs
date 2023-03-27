@@ -3,10 +3,12 @@ function getSessionId() {
   return localStorage.getItem('x-session-id');
 }
 
-function showApp() {
-  const app = document.getElementById('app');
-  app.classList.remove('hidden');
+function showApp(username) {
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('loggedInUsername').value = username;
 }
+
 
 function showMessage(message, delay = 1000) {
   const authMessage = document.createElement('p');
@@ -56,7 +58,8 @@ async function register(username, password) {
     });
 
     if (response.ok) {
-      localStorage.setItem('loggedInUsername', username);
+      document.getElementById('loggedInUsername').value = username;
+      localStorage.setItem('username', username);
     }
 
     if (!response.ok) {
@@ -67,20 +70,24 @@ async function register(username, password) {
     }
 
     const sessionId = response.headers.get('x-session-id');
+localStorage.setItem('x-session-id', sessionId);
     if (sessionId) {
       localStorage.setItem('x-session-id', sessionId);
+      console.log('Stored session ID:', sessionId);
     }
 
     // Show a message upon successful registration and hide the forms
     showMessage('Successfully registered!');
-    setTimeout(showApp, 1000);
-
- 
+    setTimeout(() => {
+      showApp(username);
+      fetchTodos();
+    }, 1000);
 
   } catch (error) {
     console.error('Error registering user:', error);
   }
 }
+
 
 async function login(username, password) {
   try {
@@ -91,47 +98,52 @@ async function login(username, password) {
     });
 
     if (response.ok) {
-      localStorage.setItem('loggedInUsername', username);
+      document.getElementById('loggedInUsername').value = username;
+      localStorage.setItem('username', username);
+
     }
 
-
-if (!response.ok) {
-  // Handle error
-  console.error('Error logging in');
-  showErrorMessage('Wrong username or password');
-  return;
-}
+    if (!response.ok) {
+      // Handle error
+      console.error('Error logging in');
+      showErrorMessage('Wrong username or password');
+      return;
+    }
 
     const sessionId = response.headers.get('x-session-id');
+    localStorage.setItem('x-session-id', sessionId);
     if (sessionId) {
       localStorage.setItem('x-session-id', sessionId);
+      console.log('Stored session ID:', sessionId);
     }
 
     // Show a message upon successful login, hide the forms, and fetch todos
     showMessage('Successfully logged in!');
-    setTimeout(showApp, 1000);
-    fetchTodos();
-
-
+    setTimeout(() => {
+      showApp(username);
+      fetchTodos();
+    }, 1000);
 
   } catch (error) {
     console.error('Error logging in:', error);
   }
 }
 
+
 async function fetchTodos() {
-  const loggedInUsername = localStorage.getItem('loggedInUsername');
+  const loggedInUsername = localStorage.getItem('username');
   if (!loggedInUsername) {
     console.warn('No logged in user, not fetching todos');
     return;
   }
 
   try {
-    const response = await fetch(`/api/todo?username=${encodeURIComponent(document.getElementById('loggedInUsername').value)}`, {
+    const sessionId = localStorage.getItem('x-session-id');
+    const response = await fetch(`/api/todo?username=${encodeURIComponent(loggedInUsername)}`, {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
-        'x-session-id': getSessionId(),
+        'x-session-id': sessionId,
       },  
       credentials: 'same-origin',
     });
@@ -143,35 +155,40 @@ async function fetchTodos() {
 }
 
 
+
+
 function renderTodos(todos) {
-  const todoList = document.createElement('ul');
-  todos.forEach(todo => {
-    const listItem = document.createElement('li');
-    listItem.textContent = todo.title; 
-    todoList.appendChild(listItem);
-  });
   const todoContainer = document.getElementById('todoContainer');
-  todoContainer.innerHTML = ''; // Clear the previous contents
-  todoContainer.appendChild(todoList);
+  todoContainer.innerHTML = '';
+  if (Array.isArray(todos)) {
+    todos.forEach((todo) => {
+      const todoElement = document.createElement('div');
+      todoElement.textContent = todo.title;
+      todoContainer.appendChild(todoElement);
+    });
+  }
 }
 
+
 window.addEventListener('DOMContentLoaded', () => {
-  fetchTodos();
   document.getElementById('addTodoButton').addEventListener('click', async () => {
-    const title = document.getElementById('newTodoInput').value; 
+    const newTodoTitle = document.getElementById('newTodoInput').value;
+    const loggedInUsername = document.getElementById('loggedInUsername').value;
+  
     try {
       const response = await fetch('/api/todo', {
         method: 'POST',
         headers: { 
-        'Content-Type': 'application/json',
-        'x-session-id': getSessionId(),
-      },  
+          'Content-Type': 'application/json',
+          'x-session-id': getSessionId(),
+        },
         body: JSON.stringify({
-          title,
-          username: document.getElementById('loggedInUsername').value,
+          title: newTodoTitle,
+          username: loggedInUsername,
         }),
-        credentials: 'same-origin', 
+        credentials: 'same-origin',
       });
+  
       const newTodo = await response.json();
       // Update the UI with the new todo
       fetchTodos(); 
