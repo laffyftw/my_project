@@ -67,14 +67,15 @@ router.use((req, res, next) => {
   
 
   const authenticateSession = (req, res, next) => {
-    const userId = loggedInUsers.get(req.query.username);
-  
-    if (!userId) {
+    const sessionId = req.headers['x-session-id'];
+    if (!sessionId || !sessions.get(sessionId) || !sessions.get(sessionId).user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-  
+    req.session = sessions.get(sessionId);
     next();
   };
+  
+  
 
 
 router.get('/protected', authenticateSession, (req, res) => {

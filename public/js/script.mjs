@@ -139,7 +139,7 @@ async function fetchTodos() {
 
   try {
     const sessionId = localStorage.getItem('x-session-id');
-    const response = await fetch(`/api/todo?username=${encodeURIComponent(loggedInUsername)}`, {
+    const response = await fetch(`/api/todo?userId=${encodeURIComponent(loggedInUsername)}`, {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
@@ -153,6 +153,7 @@ async function fetchTodos() {
     console.error('Error fetching todos:', error);
   }
 }
+
 
 
 

@@ -4,9 +4,8 @@ import pool from '../db/index.mjs';
 import { authenticateSession } from '../routes/auth.mjs';
 
 router.get('/', authenticateSession, async (req, res) => {
-  const username = req.query.username;
   try {
-    const { rows } = await pool.query('SELECT todos.* FROM todos JOIN users ON todos.user_id = users.id WHERE users.username = $1', [username]);
+    const { rows } = await pool.query('SELECT * FROM todos WHERE user_id = $1', [req.session.user.id]);
     res.json(rows);
   } catch (err) {
     console.error(err);
