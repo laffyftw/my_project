@@ -10,7 +10,7 @@ const users = new Map();
 const sessions = new Map();
 
 app.use('/node_modules', express.static('node_modules'));
-//testing
+//Testing automatic heroku deploy
 app.use(express.json());
 app.use(express.static('public')); // Serve static files from the 'public' directory
 app.use('/api/todo', todoRoutes);
