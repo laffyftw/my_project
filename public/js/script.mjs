@@ -165,8 +165,40 @@ function renderTodos(todos) {
     todos.forEach((todo) => {
       const todoElement = document.createElement('div');
       todoElement.textContent = todo.title;
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.dataset.todoId = todo.id;
+      deleteButton.addEventListener('click', async (event) => {
+        await deleteTodo(event.target.dataset.todoId);
+      });
+
+      todoElement.appendChild(deleteButton);
       todoContainer.appendChild(todoElement);
     });
+  }
+}
+
+async function deleteTodo(todoId) {
+
+  try {
+    const response = await fetch(`/api/todo/${todoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-session-id': getSessionId(),
+      },
+      credentials: 'same-origin',
+    });
+
+    if (response.ok) {
+      fetchTodos();
+    } else {
+      console.error('Error deleting todo:', todoId);
+      showErrorMessage('Error deleting todo');
+    }
+  } catch (error) {
+    console.error('Error deleting todo:', error);
   }
 }
 
