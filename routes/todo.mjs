@@ -16,10 +16,8 @@ router.get('/', authenticateSession, async (req, res) => {
 router.post('/', authenticateSession, async (req, res) => {
   try {
     const { title, username } = req.body;
-    // Retrieve the user ID from the users table using the username
     const { rows: userRows } = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     const userId = userRows[0].id;
-    // Include the user ID when inserting a new todo item
     const { rows } = await pool.query('INSERT INTO todos (title, user_id) VALUES ($1, $2) RETURNING *', [title, userId]);
     res.status(201).json(rows[0]);
   } catch (err) {

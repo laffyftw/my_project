@@ -1,4 +1,3 @@
-
 function getSessionId() {
   return localStorage.getItem('x-session-id');
 }
@@ -39,7 +38,7 @@ function showErrorMessage(message) {
 
 
 async function register(username, password) {
-  
+
   if (!username) {
     showErrorMessage('Username cannot be empty.');
     return;
@@ -49,7 +48,7 @@ async function register(username, password) {
     showErrorMessage('Password must be at least 8 characters long.');
     return;
   }
-  
+
   try {
     const response = await fetch('/auth/register', {
       method: 'POST',
@@ -70,10 +69,9 @@ async function register(username, password) {
     }
 
     const sessionId = response.headers.get('x-session-id');
-localStorage.setItem('x-session-id', sessionId);
+    localStorage.setItem('x-session-id', sessionId);
     if (sessionId) {
       localStorage.setItem('x-session-id', sessionId);
-      console.log('Stored session ID:', sessionId);
     }
 
     // Show a message upon successful registration and hide the forms
@@ -141,10 +139,10 @@ async function fetchTodos() {
     const sessionId = localStorage.getItem('x-session-id');
     const response = await fetch(`/api/todo?userId=${encodeURIComponent(loggedInUsername)}`, {
       method: 'GET',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'x-session-id': sessionId,
-      },  
+      },
       credentials: 'same-origin',
     });
     const todos = await response.json();
@@ -154,10 +152,6 @@ async function fetchTodos() {
   }
 }
 
-
-
-
-
 function renderTodos(todos) {
   const todoContainer = document.getElementById('todoContainer');
   todoContainer.innerHTML = '';
@@ -165,6 +159,7 @@ function renderTodos(todos) {
     todos.forEach((todo) => {
       const todoElement = document.createElement('div');
       todoElement.textContent = todo.title;
+      todoElement.classList.add('todo-element');
 
       const deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
@@ -207,11 +202,11 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('addTodoButton').addEventListener('click', async () => {
     const newTodoTitle = document.getElementById('newTodoInput').value;
     const loggedInUsername = document.getElementById('loggedInUsername').value;
-  
+
     try {
       const response = await fetch('/api/todo', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'x-session-id': getSessionId(),
         },
@@ -221,28 +216,28 @@ window.addEventListener('DOMContentLoaded', () => {
         }),
         credentials: 'same-origin',
       });
-  
+
       const newTodo = await response.json();
       // Update the UI with the new todo
-      fetchTodos(); 
+      fetchTodos();
     } catch (error) {
       console.error('Error adding todo:', error);
     }
   });
-// Register form submission handler
-document.getElementById('registerForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const username = document.getElementById('registerUsername').value;
-  const password = document.getElementById('registerPassword').value;
-  await register(username, password);
-});
+  // Register form submission handler
+  document.getElementById('registerForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('registerUsername').value;
+    const password = document.getElementById('registerPassword').value;
+    await register(username, password);
+  });
 
-// Login form submission handler
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const username = document.getElementById('loginUsername').value;
-  const password = document.getElementById('loginPassword').value;
-  await login(username, password);
-});
+  // Login form submission handler
+  document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    await login(username, password);
+  });
 
 });

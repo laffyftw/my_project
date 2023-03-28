@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div id="auth">
         <h2>Register</h2>
@@ -24,17 +28,12 @@
     </div>
 
     <div id="app" class="hidden">
-      <input type="hidden" id="loggedInUsername">
+        <input type="hidden" id="loggedInUsername">
         <input type="text" id="newTodoInput">
         <button id="addTodoButton">Add Todo</button>
         <div id="todoContainer"></div>
     </div>
     <script type="module" src="/js/script.mjs"></script>
 </body>
-<style>
-  .hidden {
-    display: none;
-  }
-</style>
 
 </html>

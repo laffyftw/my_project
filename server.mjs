@@ -6,11 +6,9 @@ import authRoutes from './routes/auth.mjs';
 const app = express();
 const port = process.env.PORT || 8080;
 
-const users = new Map();
 const sessions = new Map();
 
 app.use('/node_modules', express.static('node_modules'));
-//Testing automatic heroku deploy
 app.use(express.json());
 app.use(express.static('public')); // Serve static files from the 'public' directory
 app.use('/api/todo', todoRoutes);
