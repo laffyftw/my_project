@@ -14,6 +14,13 @@ app.use(express.static('public')); // Serve static files from the 'public' direc
 app.use('/api/todo', todoRoutes);
 app.use('/auth', authRoutes);
 
+app.get('/jokelangpath/:lang', (req, res) => {
+  res.json({
+    path: `../node_modules/langmodule/jokelang/${req.params.lang}.json`,
+  });
+});
+
+
 app.get('/', (req, res) => {
   res.sendFile('index.html', { root: './public' });
 });

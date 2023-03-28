@@ -1,3 +1,22 @@
+import { setLang, t } from '../node_modules/langmodule/src/lang.mjs';
+
+async function updateTranslations() {
+  const lang = "en";
+  const responsePath = await fetch(`/jokelangpath/${lang}`);
+  const filePath = await responsePath.json();
+  const response = await fetch(filePath.path);
+  const data = await response.json();
+
+  document.getElementById('registerUsername').placeholder = await t('username_placeholder', data);
+  document.getElementById('registerPassword').placeholder = await t('password_placeholder', data);
+  document.getElementById('loginUsername').placeholder = await t('username_placeholder', data);
+  document.getElementById('loginPassword').placeholder = await t('password_placeholder', data);
+
+  document.querySelector('#registerForm button').textContent = await t('register', data);
+  document.querySelector('#loginForm button').textContent = await t('login', data);
+  document.getElementById('addTodoButton').textContent = await t('add_todo', data);
+}
+
 function getSessionId() {
   return localStorage.getItem('x-session-id');
 }
@@ -9,7 +28,8 @@ function showApp(username) {
 }
 
 
-function showMessage(message, delay = 1000) {
+async function showMessage(messageKey, delay = 1000) {
+  const message = await t(messageKey);
   const authMessage = document.createElement('p');
   authMessage.textContent = message;
   const authContainer = document.getElementById('auth');
@@ -199,10 +219,15 @@ async function deleteTodo(todoId) {
 
 
 window.addEventListener('DOMContentLoaded', () => {
+
+  document.getElementById('languageSelect').addEventListener('change', async (event) => {
+    setLang(event.target.value);
+    await updateTranslations();
+  });
+
   document.getElementById('addTodoButton').addEventListener('click', async () => {
     const newTodoTitle = document.getElementById('newTodoInput').value;
     const loggedInUsername = document.getElementById('loggedInUsername').value;
-
     try {
       const response = await fetch('/api/todo', {
         method: 'POST',
