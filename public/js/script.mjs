@@ -15,7 +15,10 @@ async function updateTranslations() {
   document.querySelector('#registerForm button').textContent = await t('register', data);
   document.querySelector('#loginForm button').textContent = await t('login', data);
   document.getElementById('addTodoButton').textContent = await t('add_todo', data);
+  return data;
 }
+
+
 
 function getSessionId() {
   return localStorage.getItem('x-session-id');
@@ -28,10 +31,11 @@ function showApp(username) {
 }
 
 
-async function showMessage(messageKey, delay = 1000) {
-  const message = await t(messageKey);
+async function showMessage(messageKey, data, delay = 1000) {
+  const message = await t(messageKey, data);
   const authMessage = document.createElement('p');
   authMessage.textContent = message;
+  authMessage.classList.add('auth-message');
   const authContainer = document.getElementById('auth');
   authContainer.innerHTML = '';
   authContainer.appendChild(authMessage);
@@ -41,7 +45,11 @@ async function showMessage(messageKey, delay = 1000) {
   }, delay);
 }
 
-function showErrorMessage(message) {
+
+
+async function showErrorMessage(messageKey) {
+  const data = await updateTranslations();
+  const message = await t(messageKey, data);
   const authContainer = document.getElementById('auth');
   const existingErrorMessage = authContainer.querySelector('.error-message');
 
@@ -57,15 +65,16 @@ function showErrorMessage(message) {
 
 
 
+
 async function register(username, password) {
 
   if (!username) {
-    showErrorMessage('Username cannot be empty.');
+    await showErrorMessage('username_cannot_be_empty');
     return;
   }
 
   if (password.length < 8) {
-    showErrorMessage('Password must be at least 8 characters long.');
+    await showErrorMessage('password_must_be_8_characters');
     return;
   }
 
@@ -84,7 +93,7 @@ async function register(username, password) {
     if (!response.ok) {
       // Handle error
       console.error('Error registering user');
-      showErrorMessage('Error registering user');
+      await showErrorMessage('error_registering_user');
       return;
     }
 
@@ -95,7 +104,8 @@ async function register(username, password) {
     }
 
     // Show a message upon successful registration and hide the forms
-    showMessage('Successfully registered!');
+    const data = await updateTranslations();
+    showMessage('successfully_registered', data);
     setTimeout(() => {
       showApp(username);
       fetchTodos();
@@ -124,7 +134,7 @@ async function login(username, password) {
     if (!response.ok) {
       // Handle error
       console.error('Error logging in');
-      showErrorMessage('Wrong username or password');
+      await showErrorMessage('wrong_username_or_password');
       return;
     }
 
@@ -136,7 +146,8 @@ async function login(username, password) {
     }
 
     // Show a message upon successful login, hide the forms, and fetch todos
-    showMessage('Successfully logged in!');
+    const data = await updateTranslations();
+    showMessage('successfully_logged_in', data);
     setTimeout(() => {
       showApp(username);
       fetchTodos();

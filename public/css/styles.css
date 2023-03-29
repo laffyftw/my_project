@@ -77,3 +77,12 @@ button:hover {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
 }
+
+.auth-message {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
