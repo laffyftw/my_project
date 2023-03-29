@@ -11,6 +11,7 @@ async function updateTranslations() {
   document.getElementById('registerPassword').placeholder = await t('password_placeholder', data);
   document.getElementById('loginUsername').placeholder = await t('username_placeholder', data);
   document.getElementById('loginPassword').placeholder = await t('password_placeholder', data);
+  document.getElementById('newTodoInput').placeholder = await t('todoinput_placeholder', data);
 
   document.querySelector('#registerForm button').textContent = await t('register', data);
   document.querySelector('#loginForm button').textContent = await t('login', data);
@@ -144,7 +145,6 @@ async function login(username, password) {
     localStorage.setItem('x-session-id', sessionId);
     if (sessionId) {
       localStorage.setItem('x-session-id', sessionId);
-      console.log('Stored session ID:', sessionId);
     }
 
     // Show a message upon successful login, hide the forms, and fetch todos
