@@ -15,6 +15,8 @@ async function updateTranslations() {
   document.querySelector('#registerForm button').textContent = await t('register', data);
   document.querySelector('#loginForm button').textContent = await t('login', data);
   document.getElementById('addTodoButton').textContent = await t('add_todo', data);
+  document.querySelector('#auth h2').textContent = await t('register', data);
+  document.querySelector('#auth h2:last-of-type').textContent = await t('login', data);
   return data;
 }
 
